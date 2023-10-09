@@ -44,11 +44,7 @@ func main() {
 
 	handlers.NewHandlers(repo)
 
-	//http.HandleFunc("/", handlers.Repo.Home)
-	//http.HandleFunc("/about", handlers.Repo.About)
-
 	fmt.Printf("Staring application on port %s\n", portNumber)
-	//_ = http.ListenAndServe(portNumber, nil)
 
 	srv := &http.Server{
 		Addr:    portNumber,
