@@ -1,0 +1,58 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+<main>
+
+    <div class="container py-4">
+
+        <div class="p-3 mb-4 bg-dark rounded-3 text-bg-dark ">
+            <div class="container-fluid py-1">
+                <h1 class="display-5 fw-bold text-center mt-5">Welcome Booking</h1>
+                <p class = "display-8 fw-bold text-center mt-3">Your favourite hunting shop</p>
+
+                <h1>Make Reservation</h1>
+
+                <form method = "post" action = "" class = "needs-validation">
+                        <div class = "form-group mt-5">
+                            <label for = "first-name">first name</label>
+                            <input type = "text" name = "first_name" id = "first_name " class = "form-control" required autocomplete = "off">
+                        </div>
+                        <div class = "form-group">
+                            <label for = "last-name">last name</label>
+                            <input type = "text" name = "last_name" id = "last_name"class = "form-control" required autocomplete = "off">
+                        </div>
+                        <div class = "form-group">
+                            <label for = "email">email</label>
+                            <input type = "email" name = "email" id = "email"class = "form-control" required autocomplete = "off">
+                        </div>
+                        <div class = "form-group">
+                            <label for = "phone">Phone number</label>
+                            <input type = "text" name = "phone" id = "phone" class = "form-control" required autocomplete = "off">
+                        </div>
+                    </hr>
+                    <input type = "submit" class = "btn btn-outline-secondary" class = "form-control" type="button" value = "Make Reservation">
+                </form>
+            </div>
+        </div>
+
+        <footer class="pt-3 mt-4 text-body-secondary border-top">
+            &copy; 2023
+        </footer>
+    </div>
+    
+
+    <div class = "row my-footer">
+        <div class = "col">
+            Left
+        </div>
+        <div class = "col">
+            Middle
+        </div>
+        <div class = "col">
+            Right
+        </div>
+    </div>
+</main>
+
+{{end}}
