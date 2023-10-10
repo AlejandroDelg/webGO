@@ -2,105 +2,90 @@
 
 {{define "content"}}
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/css/datepicker-bs5.min.css">
+ <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+
+
+<style>
+    .redText{
+        color: red;
+    }
+</style>
+
 <main>
-
-    <nav class="navbar navbar-expand-lg bg-body-tertiary" data-bs-theme="dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Navbar</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-4">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">About</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            Dropdown
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="monsters.html">Monsters</a></li>
-                            <li><a class="dropdown-item" href="weapons.html">Weapons</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/quests">Quests</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="/make-reservation-quest" aria-disabled="true">Book Quest</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="/contact" aria-disabled="true">Contact</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
     <div class="container py-4">
 
         <div class="p-3 mb-4 bg-dark rounded-3 text-bg-dark ">
             <div class="container-fluid py-1">
                 <h1 class="display-5 fw-bold text-center mt-5">Welcome Booking</h1>
                 <p class = "display-8 fw-bold text-center mt-3">Your favourite hunting shop</p>
-                <h1 class="col-md-8 fw-bold fs-4 mt-5">Search for availavility of the quest</h1>
-                <form action = "/reservation.html" method = "POST">
-                    <div class="row">
+                
+                <div class = "col-md-6">
+                    <h1 class="col-md-8 fw-bold fs-4 mt-5">Search for availavility of the quest</h1>
+                <form action = "/reservation.html" method = "POST" novalidate class= "needs-validation">
+                    <div class = "col-md-3"></div>
+                    <div id ="revervationDates" class="row">
+
                     <div class="mb-3 col">
 
                       <label for="start_date" class="form-label">Start date</label>
                       <input type="date" class="form-control" id="start_date" name = "start_date" aria-describedby="startDateHelp">
-                      <div id="emailHelp" class="form-label">YYYY-MM-DD</div>
+                      <div  class="form-label">YYYY-MM-DD</div>
                     </div>
 
                     
                     <div class="mb-3 col">
                         <label for="end_date" class="form-label">End date</label>
                         <input type="date" class="form-control" id="end_date" name = "end_date" aria-describedby="startDateHelp">
-                        <div id="emailHelp" class="form-label">YYYY-MM-DD</div>
+                        <div class="form-label">YYYY-MM-DD</div>
                       </div>
                     </div>
 
 
-                    <button type="submit" class="btn btn-outline-light">Submit</button>
+                    <button type="submit" class="btn btn-outline-light">Search availavility</button>
                   </form>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-            </div>
-            <div class = "row">
-                <div class ="col text-center mb-5">
-                    <button class="btn btn-outline-secondary" type="button" href ="/make-reservation-weapon">check-availavility</button>
+                  
                 </div>
             </div>
         </div>
+    </div>
 
-        <footer class="pt-3 mt-4 text-body-secondary border-top">
-            &copy; 2023
-        </footer>
-    </div>
-    
-    <div class = "row my-footer">
-        <div class = "col">
-            Left
-        </div>
-        <div class = "col">
-            Middle
-        </div>
-        <div class = "col">
-            Right
-        </div>
-    </div>
 </main>
-<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    const elem = document.getElementById('revervationDates');
 
+    (() => {
+        'use strict'
+
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.querySelectorAll('.needs-validation')
+
+        // Loop over them and prevent submission
+        Array.from(forms).forEach(form => {
+            form.addEventListener('submit', event => {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })();
+    document.getElementById("colorButton").addEventListener("click", function (){
+        // notify("this is my message", "success");
+
+    });
+
+    function notify(msg,msgType){
+        notie.alert({
+            type: msgType, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+            text: msg,
+        })
+    }
+</script>
+
+<script src="https://unpkg.com/notie"></script>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.4/dist/js/datepicker-full.min.js"></script>
 {{end}}

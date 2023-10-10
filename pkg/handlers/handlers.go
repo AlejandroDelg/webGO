@@ -49,6 +49,18 @@ func (m *Repository) Weapons(w http.ResponseWriter, request *http.Request) {
 	render.RenderTemplate(w, "weapons.html", &models.TemplateData{})
 }
 
+func (m *Repository) Quests(w http.ResponseWriter, request *http.Request) {
+	remoteIp := request.RemoteAddr
+	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
+	render.RenderTemplate(w, "quests.html", &models.TemplateData{})
+}
+
+func (m *Repository) Contact(w http.ResponseWriter, request *http.Request) {
+	remoteIp := request.RemoteAddr
+	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
+	render.RenderTemplate(w, "contact.html", &models.TemplateData{})
+}
+
 // this is the about page
 func (m *Repository) About(w http.ResponseWriter, request *http.Request) {
 
