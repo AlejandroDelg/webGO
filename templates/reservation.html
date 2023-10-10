@@ -22,7 +22,8 @@
                 
                 <div class = "col-md-6">
                     <h1 class="col-md-8 fw-bold fs-4 mt-5">Search for availavility of the quest</h1>
-                <form action = "/reservation.html" method = "POST" novalidate class= "needs-validation">
+                <form action = "/make-reservation-quest" method = "POST" novalidate class= "needs-validation">
+                    <input type = "hidden" name = "csrf_token" value = "{{.CSRFToken}}">
                     <div class = "col-md-3"></div>
                     <div id ="revervationDates" class="row">
 
@@ -51,39 +52,6 @@
     </div>
 
 </main>
-<script>
-    const elem = document.getElementById('revervationDates');
-
-    (() => {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        const forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.from(forms).forEach(form => {
-            form.addEventListener('submit', event => {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-
-                form.classList.add('was-validated')
-            }, false)
-        })
-    })();
-    document.getElementById("colorButton").addEventListener("click", function (){
-        // notify("this is my message", "success");
-
-    });
-
-    function notify(msg,msgType){
-        notie.alert({
-            type: msgType, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
-            text: msg,
-        })
-    }
-</script>
 
 <script src="https://unpkg.com/notie"></script>
 <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>

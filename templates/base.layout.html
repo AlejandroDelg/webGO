@@ -117,6 +117,40 @@
         
         {{block "js" .}}
 
+    <script>
+        const elem = document.getElementById('revervationDates');
+
+        (() => {
+            'use strict'
+
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            const forms = document.querySelectorAll('.needs-validation')
+
+            // Loop over them and prevent submission
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })();
+        document.getElementById("colorButton").addEventListener("click", function (){
+            // notify("this is my message", "success");
+
+        });
+
+        function notify(msg,msgType){
+            notie.alert({
+                type: msgType, // optional, default = 4, enum: [1, 2, 3, 4, 5, 'success', 'warning', 'error', 'info', 'neutral']
+                text: msg,
+            })
+        }
+    </script>
+
         {{end}}
     </body>
 
