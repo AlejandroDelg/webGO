@@ -3,14 +3,13 @@ package render
 import (
 	"bytes"
 	"fmt"
+	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/justinas/nosurf"
 	"html/template"
 	"log"
 	"net/http"
 	"path/filepath"
-
-	"github.com/AlejandroDelg/webgo/pkg/config"
-	"github.com/AlejandroDelg/webgo/pkg/models"
 )
 
 var functions = template.FuncMap{}

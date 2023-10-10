@@ -1,10 +1,9 @@
 package main
 
 import (
+	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/handlers"
 	"net/http"
-
-	"github.com/AlejandroDelg/webgo/pkg/config"
-	"github.com/AlejandroDelg/webgo/pkg/handlers"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"

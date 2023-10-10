@@ -1,11 +1,10 @@
 package handlers
 
 import (
+	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/models"
+	"github.com/AlejandroDelg/webgo/internal/render"
 	"net/http"
-
-	"github.com/AlejandroDelg/webgo/pkg/config"
-	"github.com/AlejandroDelg/webgo/pkg/models"
-	"github.com/AlejandroDelg/webgo/pkg/render"
 )
 
 var Repo *Repository
@@ -45,7 +44,11 @@ func (m *Repository) MakeReservationQuest(w http.ResponseWriter, request *http.R
 
 // POST request
 func (m *Repository) PostMakeReservationQuest(w http.ResponseWriter, request *http.Request) {
-	w.Write([]byte("posted to search to availability"))
+
+	start_date := request.Form.Get("start_date")
+	end_date := request.Form.Get("end_date")
+	str := start_date + "     " + end_date
+	w.Write([]byte(str))
 }
 
 func (m *Repository) Weapons(w http.ResponseWriter, request *http.Request) {

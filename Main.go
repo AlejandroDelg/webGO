@@ -2,13 +2,12 @@ package main
 
 import (
 	"fmt"
+	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/handlers"
+	"github.com/AlejandroDelg/webgo/internal/render"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/AlejandroDelg/webgo/pkg/config"
-	"github.com/AlejandroDelg/webgo/pkg/handlers"
-	"github.com/AlejandroDelg/webgo/pkg/render"
 
 	"github.com/alexedwards/scs/v2"
 )
