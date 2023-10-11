@@ -16,14 +16,14 @@
 
             </div>
         </div>
+        {{range .}}
         <div class="container">
             <div class="row">
                 <div class = "row mb-5">
                     <div class="h-100 p-5 text-bg-dark rounded-3 ">
-                        <img src = "/static/images/fatalis.jpg" class = "img-fluid img-thumbnail rounded mx-auto d-block monster-image  mb-3">
-                        <h2 class = "text-center mb-3">Fatalis</h2>
-                        <p class = "text-center ">A legendary black dragon known only as Fatalis. Rumored to have destroyed a kingdom in a single night, and has taken its castle for a roost.
-                            As Long as its horns are intact, overcoming its final form's breath attack may be impossible. Cannons and ballistae can topple it. Flinch shots when its flying or standing will lower its head.</p>
+                        <img src ={{.ImageIcon}} class = "img-fluid img-thumbnail rounded mx-auto d-block monster-image  mb-3">
+                        <h2 class = "text-center mb-3">{{.Name}}</h2>
+                        <p class = "text-center ">{{.Description}}</p>
                         <div class="text-center">
                         <button class="btn btn-outline-light" type="button">See details</button>
                         </div>
@@ -32,6 +32,7 @@
                 </div>
             </div>
         </div>
+         {{end}}
 
     </div>
 </main>

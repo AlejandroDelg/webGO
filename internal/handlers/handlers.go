@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/forms"
 	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
 	"net/http"
@@ -10,7 +11,8 @@ import (
 var Repo *Repository
 
 type Repository struct {
-	App *config.AppConfig
+	App      *config.AppConfig
+	monsters []*models.Monster
 }
 
 // NewRepo creates a new repository
@@ -24,6 +26,10 @@ func NewHandlers(r *Repository) {
 	Repo = r
 }
 
+func GetMonsters(monsters []*models.Monster) {
+	Repo.monsters = monsters
+}
+
 // home is the home page
 func (m *Repository) Home(w http.ResponseWriter, request *http.Request) {
 	remoteIp := request.RemoteAddr
@@ -32,10 +38,9 @@ func (m *Repository) Home(w http.ResponseWriter, request *http.Request) {
 }
 
 func (m *Repository) Monsters(w http.ResponseWriter, request *http.Request) {
-	remoteIp := request.RemoteAddr
-	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
-	render.RenderTemplate(w, request, "monsters.html", &models.TemplateData{})
+	render.RenderTemplateMonster(w, request, "monsters.html", Repo.monsters)
 }
+
 func (m *Repository) MakeReservationQuest(w http.ResponseWriter, request *http.Request) {
 	remoteIp := request.RemoteAddr
 	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
@@ -69,6 +74,13 @@ func (m *Repository) Contact(w http.ResponseWriter, request *http.Request) {
 	render.RenderTemplate(w, request, "contact.html", &models.TemplateData{})
 }
 func (m *Repository) MakeReservation(w http.ResponseWriter, request *http.Request) {
+	render.RenderTemplate(w, request, "make-reservation.html", &models.TemplateData{
+		Form: forms.New(nil),
+	})
+}
+
+// POST Request
+func (m *Repository) PostMakeReservation(w http.ResponseWriter, request *http.Request) {
 	remoteIp := request.RemoteAddr
 	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
 	render.RenderTemplate(w, request, "make-reservation.html", &models.TemplateData{})

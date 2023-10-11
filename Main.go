@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/AlejandroDelg/webgo/internal/config"
 	"github.com/AlejandroDelg/webgo/internal/handlers"
+	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
 	"log"
 	"net/http"
@@ -34,6 +35,17 @@ func main() {
 	if err != nil {
 		log.Fatal("cannot create template cache")
 	}
+	allMonsters := []*models.Monster{}
+	allQuests := []*models.Quest{}
+
+	fatalis := models.Fatalis()
+	lagiacrus := models.Lagiacrus()
+	questFatalis := models.QuestFatalis()
+	fatalis.Quests = append(fatalis.Quests, questFatalis)
+
+	allMonsters = append(allMonsters, fatalis)
+	allMonsters = append(allMonsters, lagiacrus)
+	allQuests = append(allQuests, &questFatalis)
 
 	app.TemplateCache = tc
 
@@ -43,6 +55,7 @@ func main() {
 
 	handlers.NewHandlers(repo)
 
+	handlers.GetMonsters(allMonsters)
 	fmt.Printf("Staring application on port %s\n", portNumber)
 
 	srv := &http.Server{

@@ -48,6 +48,32 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templat
 
 }
 
+// RenderTemplateMonster renders a template of all the monsters
+func RenderTemplateMonster(w http.ResponseWriter, r *http.Request, tmpl string, templateDataMonsters []*models.Monster) {
+
+	var tc map[string]*template.Template
+	// get the template cache from the app config
+	if app.UseCache {
+		tc = app.TemplateCache
+	} else {
+		tc, _ = CreateTemplateCache()
+	}
+
+	t, ok := tc[tmpl]
+	if !ok {
+		log.Fatal("err")
+	}
+
+	buf := new(bytes.Buffer)
+	_ = t.Execute(buf, templateDataMonsters)
+
+	_, err := buf.WriteTo(w)
+	if err != nil {
+		fmt.Println("error writing template to browser", err)
+	}
+
+}
+
 var app *config.AppConfig
 
 // sets the config for the template
