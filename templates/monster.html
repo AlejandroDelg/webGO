@@ -10,9 +10,9 @@
             <div class="container-fluid py-1">
                 <h1 class="display-5 fw-bold text-center mt-5">Welcome to Monster Hunter Store</h1>
                 <p class = "display-8 fw-bold text-center mt-3">Your favourite hunting shop</p>
+
             </div>
         </div>
-        {{range .}}
         <div class="container">
             <div class="row">
                 <div class = "row mb-5">
@@ -21,14 +21,13 @@
                         <h2 class = "text-center mb-3">{{.Name}}</h2>
                         <p class = "text-center ">{{.Description}}</p>
                         <div class="text-center">
-                            <a class="btn btn-outline-light" type="button" href="/monsters/{{.Name}}">See details</a>
+                            <button class="btn btn-outline-light" type="button">See details</button>
                         </div>
                     </div>
-                
+
                 </div>
             </div>
         </div>
-         {{end}}
 
     </div>
 </main>

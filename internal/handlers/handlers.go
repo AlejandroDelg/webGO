@@ -5,6 +5,8 @@ import (
 	"github.com/AlejandroDelg/webgo/internal/forms"
 	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
+	"github.com/go-chi/chi/v5"
+	"log"
 	"net/http"
 )
 
@@ -38,7 +40,19 @@ func (m *Repository) Home(w http.ResponseWriter, request *http.Request) {
 }
 
 func (m *Repository) Monsters(w http.ResponseWriter, request *http.Request) {
-	render.RenderTemplateMonster(w, request, "monsters.html", Repo.monsters)
+	render.RenderTemplateMonsters(w, request, "monsters.html", Repo.monsters)
+}
+func (m *Repository) Monster(w http.ResponseWriter, request *http.Request) {
+	monsterName := chi.URLParam(request, "name")
+	var monster *models.Monster
+	for _, t := range Repo.monsters {
+		if t.Name == monsterName {
+			monster = t
+			println("monstruo encontrado")
+		}
+	}
+	println("llega aqui")
+	render.RenderTemplateMonster(w, request, "monster.html", monster)
 }
 
 func (m *Repository) MakeReservationQuest(w http.ResponseWriter, request *http.Request) {
@@ -73,7 +87,9 @@ func (m *Repository) Contact(w http.ResponseWriter, request *http.Request) {
 	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
 	render.RenderTemplate(w, request, "contact.html", &models.TemplateData{})
 }
+
 func (m *Repository) MakeReservation(w http.ResponseWriter, request *http.Request) {
+
 	render.RenderTemplate(w, request, "make-reservation.html", &models.TemplateData{
 		Form: forms.New(nil),
 	})
@@ -81,9 +97,29 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, request *http.Reques
 
 // POST Request
 func (m *Repository) PostMakeReservation(w http.ResponseWriter, request *http.Request) {
-	remoteIp := request.RemoteAddr
-	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
-	render.RenderTemplate(w, request, "make-reservation.html", &models.TemplateData{})
+	err := request.ParseForm()
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	reservation := models.Reservation{
+		FirstName: request.Form.Get("first_name"),
+		LastName:  request.Form.Get("last_name"),
+		Email:     request.Form.Get("email"),
+		Phone:     request.Form.Get("phone"),
+	}
+	form := forms.New(request.PostForm)
+	form.Has("first_name", request)
+	if !form.Valid() {
+		data := make(map[string]interface{})
+		data["reservation"] = reservation
+
+		render.RenderTemplate(w, request, "make-reservation.html", &models.TemplateData{
+			Form: form,
+			Data: data,
+		})
+		return
+	}
 }
 
 // this is the about page

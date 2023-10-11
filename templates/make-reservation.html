@@ -13,18 +13,24 @@
 
                 <h1>Make Reservation</h1>
 
-                <form method = "post" action = "" class = "needs-validation">
-                        <div class = "form-group mt-5">
-                            <label for = "first-name">first name</label>
-                            <input type = "text" name = "first_name" id = "first_name " class = "form-control" required autocomplete = "off">
+                <form method = "post" action = "/make-reservation" class = "needs-validation" novalidate>
+                    <input type = "hidden" name = "csrf_token" value = "{{.CSRFToken}}">
+                        <div class = "form-group">
+                            <label for = "first_name">first name</label>
+                            {{with .Form.Errors.Get "first_name"}}
+                                <label class = "text-danger">{{.}}</label>
+                            {{end}}
+                            <input type = "text" name = "first_name" id = "first_name " class = "form-control {{with .Form.Errors.Get "first_name"}} is-invalid {{end}}"
+
+                                   required autocomplete = "off">
                         </div>
                         <div class = "form-group">
-                            <label for = "last-name">last name</label>
-                            <input type = "text" name = "last_name" id = "last_name"class = "form-control" required autocomplete = "off">
+                            <label for = "last_name">last name</label>
+                            <input type = "text" name = "last_name" id = "last_name" class = "form-control" required autocomplete = "off">
                         </div>
                         <div class = "form-group">
                             <label for = "email">email</label>
-                            <input type = "email" name = "email" id = "email"class = "form-control" required autocomplete = "off">
+                            <input type = "email" name = "email" id = "email" class = "form-control" required autocomplete = "off">
                         </div>
                         <div class = "form-group">
                             <label for = "phone">Phone number</label>
@@ -42,17 +48,6 @@
     </div>
     
 
-    <div class = "row my-footer">
-        <div class = "col">
-            Left
-        </div>
-        <div class = "col">
-            Middle
-        </div>
-        <div class = "col">
-            Right
-        </div>
-    </div>
 </main>
 
 {{end}}

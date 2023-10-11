@@ -43,8 +43,8 @@ func main() {
 	questFatalis := models.QuestFatalis()
 	fatalis.Quests = append(fatalis.Quests, questFatalis)
 
-	allMonsters = append(allMonsters, fatalis)
 	allMonsters = append(allMonsters, lagiacrus)
+	allMonsters = append(allMonsters, fatalis)
 	allQuests = append(allQuests, &questFatalis)
 
 	app.TemplateCache = tc
