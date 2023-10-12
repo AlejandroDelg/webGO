@@ -1,8 +1,11 @@
 package forms
 
 import (
+	"fmt"
+	"github.com/asaskevich/govalidator"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 // Form creates a custom form struct
@@ -27,6 +30,31 @@ func (f *Form) Has(field string, request *http.Request) bool {
 
 }
 
+func (f *Form) Required(fields ...string) {
+	for _, t := range fields {
+
+		value := f.Get(t)
+		if strings.TrimSpace(value) == "" {
+			f.Errors.Add(t, "this field cannot be blank")
+		}
+	}
+}
+
+func (f *Form) MinLength(field string, length int, r *http.Request) bool {
+	x := r.Form.Get(field)
+	if len(x) < length {
+		f.Errors.Add(x, fmt.Sprintf("this field must be at least %d long", length))
+		return false
+	}
+	return true
+}
+
 func (f *Form) Valid() bool {
 	return len(f.Errors) == 0
+}
+
+func (f *Form) IsEmail(field string) {
+	if !govalidator.IsEmail(field) {
+		f.Errors.Add(field, "is not and email")
+	}
 }

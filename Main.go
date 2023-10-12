@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"fmt"
 	"github.com/AlejandroDelg/webgo/internal/config"
 	"github.com/AlejandroDelg/webgo/internal/handlers"
@@ -20,7 +21,7 @@ var session *scs.SessionManager
 
 // main is the main function
 func main() {
-
+	gob.Register(models.Reservation{})
 	app.InProduction = false
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour

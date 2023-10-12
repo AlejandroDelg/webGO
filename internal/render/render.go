@@ -87,7 +87,7 @@ func RenderTemplateMonster(w http.ResponseWriter, r *http.Request, tmpl string, 
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal("err")
+		log.Fatal("error loading the template")
 	}
 
 	buf := new(bytes.Buffer)

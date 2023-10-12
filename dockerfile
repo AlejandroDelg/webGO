@@ -1,4 +1,5 @@
 # Usar una imagen base de Go
+# docker run -p 8080:8080 my-go-app-image
 FROM golang:latest
 
 # Establecer el directorio de trabajo dentro del contenedor

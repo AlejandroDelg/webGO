@@ -89,9 +89,13 @@ func (m *Repository) Contact(w http.ResponseWriter, request *http.Request) {
 }
 
 func (m *Repository) MakeReservation(w http.ResponseWriter, request *http.Request) {
+	var emptyReservation models.Reservation
 
+	data := make(map[string]interface{})
+	data["reservation"] = emptyReservation
 	render.RenderTemplate(w, request, "make-reservation.html", &models.TemplateData{
 		Form: forms.New(nil),
+		Data: data,
 	})
 }
 
@@ -109,7 +113,11 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, request *http.Re
 		Phone:     request.Form.Get("phone"),
 	}
 	form := forms.New(request.PostForm)
-	form.Has("first_name", request)
+
+	form.Required("first_name", "last_name", "email")
+	form.MinLength("first_name", 3, request)
+	// form.IsEmail("email")
+
 	if !form.Valid() {
 		data := make(map[string]interface{})
 		data["reservation"] = reservation
@@ -120,6 +128,8 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, request *http.Re
 		})
 		return
 	}
+	m.App.Session.Put(request.Context(), "reservation", reservation)
+	http.Redirect(w, request, "/reservation-summary", http.StatusSeeOther)
 }
 
 // this is the about page
@@ -133,5 +143,19 @@ func (m *Repository) About(w http.ResponseWriter, request *http.Request) {
 
 	render.RenderTemplate(w, request, "about.page.html", &models.TemplateData{
 		StringMap: stringMap,
+	})
+}
+
+func (m *Repository) ReservationSummary(w http.ResponseWriter, request *http.Request) {
+	reservation, ok := m.App.Session.Get(request.Context(), "reservation").(models.Reservation)
+	if !ok {
+		log.Println("Cant get item from session")
+		return
+	}
+	data := make(map[string]interface{})
+
+	data["reservation"] = reservation
+	render.RenderTemplate(w, request, "reservationSummary.html", &models.TemplateData{
+		Data: data,
 	})
 }
