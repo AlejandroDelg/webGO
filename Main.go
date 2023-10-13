@@ -7,11 +7,10 @@ import (
 	"github.com/AlejandroDelg/webgo/internal/handlers"
 	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
+	"github.com/alexedwards/scs/v2"
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/alexedwards/scs/v2"
 )
 
 const portNumber = ":8080"
@@ -21,6 +20,28 @@ var session *scs.SessionManager
 
 // main is the main function
 func main() {
+	err := run()
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	fmt.Printf("Staring application on port %s\n", portNumber)
+
+	srv := &http.Server{
+		Addr:    portNumber,
+		Handler: routes(&app),
+	}
+
+	err2 := srv.ListenAndServe()
+
+	if err2 != nil {
+		fmt.Println("Error in Server: ", err2)
+	}
+}
+
+func run() error {
+
 	gob.Register(models.Reservation{})
 	app.InProduction = false
 	session = scs.New()
@@ -35,6 +56,7 @@ func main() {
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
+		return err
 	}
 	allMonsters := []*models.Monster{}
 	allQuests := []*models.Quest{}
@@ -57,16 +79,5 @@ func main() {
 	handlers.NewHandlers(repo)
 
 	handlers.GetMonsters(allMonsters)
-	fmt.Printf("Staring application on port %s\n", portNumber)
-
-	srv := &http.Server{
-		Addr:    portNumber,
-		Handler: routes(&app),
-	}
-
-	err2 := srv.ListenAndServe()
-
-	if err2 != nil {
-		fmt.Println("Error in Server: ", err2)
-	}
+	return nil
 }
