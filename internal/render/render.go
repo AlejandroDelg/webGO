@@ -14,6 +14,8 @@ import (
 
 var functions = template.FuncMap{}
 
+var pathToTemplates = "./templates"
+
 func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateData {
 	td.Flash = app.Session.PopString(r.Context(), "flash")
 	td.Warning = app.Session.PopString(r.Context(), "warning")
@@ -35,7 +37,7 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templat
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal("err")
+		log.Fatal("error in rendering the template")
 	}
 
 	buf := new(bytes.Buffer)
@@ -64,7 +66,7 @@ func RenderTemplateMonsters(w http.ResponseWriter, r *http.Request, tmpl string,
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal("err")
+		log.Fatal("error in getting the template")
 	}
 
 	buf := new(bytes.Buffer)
@@ -90,7 +92,7 @@ func RenderTemplateMonster(w http.ResponseWriter, r *http.Request, tmpl string, 
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal("error loading the template")
+		log.Fatal("error loading the template in renderTemplateMonster")
 	}
 
 	buf := new(bytes.Buffer)
@@ -114,8 +116,7 @@ func NewTemplates(a *config.AppConfig) {
 func CreateTemplateCache() (map[string]*template.Template, error) {
 
 	myCache := map[string]*template.Template{}
-
-	pages, err := filepath.Glob("./templates/*.html")
+	pages, err := filepath.Glob(fmt.Sprintf("%s/*.html", pathToTemplates))
 	if err != nil {
 		return myCache, err
 	}
@@ -127,13 +128,13 @@ func CreateTemplateCache() (map[string]*template.Template, error) {
 			return myCache, err
 		}
 
-		matches, err := filepath.Glob("./templates/*.layout.html")
+		matches, err := filepath.Glob(fmt.Sprintf("%s/*.layout.html", pathToTemplates))
 		if err != nil {
 			return myCache, err
 		}
 
 		if len(matches) > 0 {
-			ts, err = ts.ParseGlob("./templates/*.layout.html")
+			ts, err = ts.ParseGlob(fmt.Sprintf("%s/*.layout.html", pathToTemplates))
 			if err != nil {
 				return myCache, err
 			}
