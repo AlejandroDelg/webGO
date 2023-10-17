@@ -2,6 +2,7 @@ package render
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github.com/AlejandroDelg/webgo/internal/config"
 	"github.com/AlejandroDelg/webgo/internal/models"
@@ -25,7 +26,7 @@ func AddDefaultData(td *models.TemplateData, r *http.Request) *models.TemplateDa
 }
 
 // RenderTemplate renders a template
-func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templateData *models.TemplateData) {
+func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templateData *models.TemplateData) error {
 
 	var tc map[string]*template.Template
 	// get the template cache from the app config
@@ -37,7 +38,7 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templat
 
 	t, ok := tc[tmpl]
 	if !ok {
-		log.Fatal("error in rendering the template")
+		return errors.New("cant get template")
 	}
 
 	buf := new(bytes.Buffer)
@@ -49,12 +50,15 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request, tmpl string, templat
 	_, err := buf.WriteTo(w)
 	if err != nil {
 		fmt.Println("error writing template to browser", err)
+		return err
 	}
+
+	return nil
 
 }
 
 // RenderTemplateMonsters renders a template of all the monsters
-func RenderTemplateMonsters(w http.ResponseWriter, r *http.Request, tmpl string, templateDataMonsters []*models.Monster) {
+func RenderTemplateMonsters(w http.ResponseWriter, r *http.Request, tmpl string, templateDataMonsters []*models.Monster) error {
 
 	var tc map[string]*template.Template
 	// get the template cache from the app config
@@ -76,7 +80,7 @@ func RenderTemplateMonsters(w http.ResponseWriter, r *http.Request, tmpl string,
 	if err != nil {
 		fmt.Println("error writing template to browser", err)
 	}
-
+	return nil
 }
 
 // RenderTemplateMonster renders a template of all the monsters

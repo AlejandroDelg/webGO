@@ -30,3 +30,20 @@ func TestMain(m *testing.M) {
 	app = &testApp
 	os.Exit(m.Run())
 }
+
+type myWriter struct {
+}
+
+func (tw *myWriter) Header() http.Header {
+	var h http.Header
+	return h
+}
+
+func (tw *myWriter) WriteHeader(i int) {
+
+}
+
+func (tw *myWriter) Write(i []byte) (int, error) {
+	length := len(i)
+	return length, nil
+}
