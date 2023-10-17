@@ -3,7 +3,6 @@ package forms
 import (
 	"fmt"
 	"github.com/asaskevich/govalidator"
-	"net/http"
 	"net/url"
 	"strings"
 )
@@ -21,8 +20,8 @@ func New(data url.Values) *Form {
 }
 
 // Has checks if form field is in post and not empty
-func (f *Form) Has(field string, request *http.Request) bool {
-	if request.Form.Get(field) != "" {
+func (f *Form) Has(field string) bool {
+	if f.Get(field) != "" {
 		return true
 	}
 	f.Errors.Add(field, "this field cannot be blank")
@@ -40,8 +39,9 @@ func (f *Form) Required(fields ...string) {
 	}
 }
 
-func (f *Form) MinLength(field string, length int, r *http.Request) bool {
-	x := r.Form.Get(field)
+func (f *Form) MinLength(field string, length int) bool {
+	x := f.Get(field)
+	println("x es igual a : ", x)
 	if len(x) < length {
 		f.Errors.Add(x, fmt.Sprintf("this field must be at least %d long", length))
 		return false
@@ -53,8 +53,11 @@ func (f *Form) Valid() bool {
 	return len(f.Errors) == 0
 }
 
-func (f *Form) IsEmail(field string) {
+func (f *Form) IsEmail(field string) bool {
 	if !govalidator.IsEmail(field) {
 		f.Errors.Add(field, "is not and email")
+		return false
 	}
+	return true
+
 }
