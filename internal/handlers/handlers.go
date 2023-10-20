@@ -1,12 +1,12 @@
 package handlers
 
 import (
+	"github.com/AlejandroDelg/webgo/helpers"
 	"github.com/AlejandroDelg/webgo/internal/config"
 	"github.com/AlejandroDelg/webgo/internal/forms"
 	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
 	"github.com/go-chi/chi/v5"
-	"log"
 	"net/http"
 )
 
@@ -34,8 +34,7 @@ func GetMonsters(monsters []*models.Monster) {
 
 // home is the home page
 func (m *Repository) Home(w http.ResponseWriter, request *http.Request) {
-	remoteIp := request.RemoteAddr
-	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
+
 	render.RenderTemplate(w, request, "home.page.html", &models.TemplateData{})
 }
 
@@ -56,8 +55,6 @@ func (m *Repository) Monster(w http.ResponseWriter, request *http.Request) {
 }
 
 func (m *Repository) MakeReservationQuest(w http.ResponseWriter, request *http.Request) {
-	remoteIp := request.RemoteAddr
-	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
 	render.RenderTemplate(w, request, "reservation.html", &models.TemplateData{})
 }
 
@@ -71,8 +68,6 @@ func (m *Repository) PostMakeReservationQuest(w http.ResponseWriter, request *ht
 }
 
 func (m *Repository) Weapons(w http.ResponseWriter, request *http.Request) {
-	remoteIp := request.RemoteAddr
-	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
 	render.RenderTemplate(w, request, "weapons.html", &models.TemplateData{})
 }
 
@@ -83,8 +78,6 @@ func (m *Repository) Quests(w http.ResponseWriter, request *http.Request) {
 }
 
 func (m *Repository) Contact(w http.ResponseWriter, request *http.Request) {
-	remoteIp := request.RemoteAddr
-	m.App.Session.Put(request.Context(), "remote_ip", remoteIp)
 	render.RenderTemplate(w, request, "contact.html", &models.TemplateData{})
 }
 
@@ -103,7 +96,7 @@ func (m *Repository) MakeReservation(w http.ResponseWriter, request *http.Reques
 func (m *Repository) PostMakeReservation(w http.ResponseWriter, request *http.Request) {
 	err := request.ParseForm()
 	if err != nil {
-		log.Println(err)
+		helpers.ServerError(w, err)
 		return
 	}
 	reservation := models.Reservation{
@@ -115,7 +108,7 @@ func (m *Repository) PostMakeReservation(w http.ResponseWriter, request *http.Re
 	form := forms.New(request.PostForm)
 
 	form.Required("first_name", "last_name", "email")
-	form.MinLength("first_name", 3, request)
+	form.MinLength("first_name", 3)
 	// form.IsEmail("email")
 
 	if !form.Valid() {
@@ -149,7 +142,7 @@ func (m *Repository) About(w http.ResponseWriter, request *http.Request) {
 func (m *Repository) ReservationSummary(w http.ResponseWriter, request *http.Request) {
 	reservation, ok := m.App.Session.Get(request.Context(), "reservation").(models.Reservation)
 	if !ok {
-		log.Println("Cant get item from session")
+		m.App.ErrorLog.Println("Cant get item from session")
 		m.App.Session.Put(request.Context(), "error", "cant get reservation from session")
 		http.Redirect(w, request, "/", http.StatusTemporaryRedirect)
 		return

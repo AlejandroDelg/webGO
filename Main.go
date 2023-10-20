@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/gob"
 	"fmt"
+	"github.com/AlejandroDelg/webgo/helpers"
 	"github.com/AlejandroDelg/webgo/internal/config"
 	"github.com/AlejandroDelg/webgo/internal/handlers"
 	"github.com/AlejandroDelg/webgo/internal/models"
@@ -10,6 +11,7 @@ import (
 	"github.com/alexedwards/scs/v2"
 	"log"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -17,6 +19,8 @@ const portNumber = ":8080"
 
 var app config.AppConfig
 var session *scs.SessionManager
+var infoLog *log.Logger
+var errorLog *log.Logger
 
 // main is the main function
 func main() {
@@ -44,6 +48,13 @@ func run() error {
 
 	gob.Register(models.Reservation{})
 	app.InProduction = false
+
+	infoLog = log.New(os.Stdout, "INFO   ", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	errorLog = log.New(os.Stdout, "ERROR    ", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
+
 	session = scs.New()
 	session.Lifetime = 24 * time.Hour
 
@@ -73,6 +84,8 @@ func run() error {
 	app.TemplateCache = tc
 
 	render.NewTemplates(&app)
+
+	helpers.NewHelpers(&app)
 
 	repo := handlers.NewRepo(&app)
 

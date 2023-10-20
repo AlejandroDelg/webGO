@@ -13,6 +13,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
 )
@@ -69,6 +70,12 @@ func getRoutes() http.Handler {
 
 	app.TemplateCache = tc
 	app.UseCache = true
+
+	infoLog := log.New(os.Stdout, "INFO   ", log.Ldate|log.Ltime)
+	app.InfoLog = infoLog
+
+	errorLog := log.New(os.Stdout, "ERROR    ", log.Ldate|log.Ltime|log.Lshortfile)
+	app.ErrorLog = errorLog
 
 	render.NewTemplates(&app)
 
