@@ -4,6 +4,7 @@ import (
 	"encoding/gob"
 	"fmt"
 	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/driver"
 	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
 	"github.com/alexedwards/scs/v2"
@@ -79,7 +80,19 @@ func getRoutes() http.Handler {
 
 	render.NewTemplates(&app)
 
-	repo := NewRepo(&app)
+	log.Println("Connecting to database ...")
+
+	// create database
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=webGo user=postgres password=root")
+
+	if err != nil{
+		log.Fatal("ERROR: ", err)
+	}
+
+	log.Println("Connected to database !!!")
+
+	
+	repo := NewRepo(&app, db)
 
 	NewHandlers(repo)
 
