@@ -3,9 +3,12 @@ package handlers
 import (
 	"github.com/AlejandroDelg/webgo/helpers"
 	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/driver"
 	"github.com/AlejandroDelg/webgo/internal/forms"
 	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
+	"github.com/AlejandroDelg/webgo/internal/repository"
+	db_repo "github.com/AlejandroDelg/webgo/internal/repository/dbRepo"
 	"github.com/go-chi/chi/v5"
 	"net/http"
 )
@@ -15,12 +18,15 @@ var Repo *Repository
 type Repository struct {
 	App      *config.AppConfig
 	monsters []*models.Monster
+	DB		repository.DbRepo
 }
 
 // NewRepo creates a new repository
-func NewRepo(a *config.AppConfig) *Repository {
+func NewRepo(a *config.AppConfig, db *driver.DB) *Repository {
 	return &Repository{
-		App: a,
+		App:      a,
+		monsters: nil,
+		DB:       db_repo.NewPostgresRepo(db.SQL, a),
 	}
 }
 
@@ -35,6 +41,7 @@ func GetMonsters(monsters []*models.Monster) {
 // home is the home page
 func (m *Repository) Home(w http.ResponseWriter, request *http.Request) {
 
+	m.DB.AllUsers()
 	render.RenderTemplate(w, request, "home.page.html", &models.TemplateData{})
 }
 

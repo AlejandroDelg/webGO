@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/AlejandroDelg/webgo/helpers"
 	"github.com/AlejandroDelg/webgo/internal/config"
+	"github.com/AlejandroDelg/webgo/internal/driver"
 	"github.com/AlejandroDelg/webgo/internal/handlers"
 	"github.com/AlejandroDelg/webgo/internal/models"
 	"github.com/AlejandroDelg/webgo/internal/render"
@@ -24,7 +25,7 @@ var errorLog *log.Logger
 
 // main is the main function
 func main() {
-	err := run()
+	err, db := run()
 
 	if err != nil {
 		log.Fatal(err)
@@ -42,9 +43,11 @@ func main() {
 	if err2 != nil {
 		fmt.Println("Error in Server: ", err2)
 	}
+
+	defer db.SQL.Close()
 }
 
-func run() error {
+func run() (error, *driver.DB) {
 
 	gob.Register(models.Reservation{})
 	app.InProduction = false
@@ -64,10 +67,20 @@ func run() error {
 
 	app.Session = session
 
+	log.Println("Connecting to database ...")
+	// create database
+	db, err := driver.ConnectSQL("host=localhost port=5432 dbname=webGo user=postgres password=root")
+
+	if err != nil{
+		log.Fatal("ERROR: ", err)
+	}
+
+	log.Println("Connected to database !!!")
+
 	tc, err := render.CreateTemplateCache()
 	if err != nil {
 		log.Fatal("cannot create template cache")
-		return err
+		return err, nil
 	}
 	allMonsters := []*models.Monster{}
 	allQuests := []*models.Quest{}
@@ -87,10 +100,10 @@ func run() error {
 
 	helpers.NewHelpers(&app)
 
-	repo := handlers.NewRepo(&app)
+	repo := handlers.NewRepo(&app, db)
 
 	handlers.NewHandlers(repo)
 
 	handlers.GetMonsters(allMonsters)
-	return nil
+	return nil, db
 }
